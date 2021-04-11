@@ -1,9 +1,13 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
-class Program {
+class Task1 {
+	/// <summary>
+	/// Entry point.
+	/// </summary>
 	static void Main() {
 		// create a SortedSet for storing the text because it
 		//	1. ignores newly added duplicates;
@@ -26,14 +30,14 @@ class Program {
 			return;
 		}
 
-		// add the ordered items to a string
-		string result = null;
+		// add the ordered items to a StringBuilder, since there are potentially many concatenations to be made
+		StringBuilder result = new();
 		foreach (var item in set) {
-			result += string.Concat(item, "\n");
+			result.Append(item + "\n");
 		}
 
 		// remove the last newline
-		result = result.Remove(result.Length - 1);
+		result = result.Remove(result.Length - 1, 1);
 
 		// print the resulting string to the output file in lexicographical order
 		string outputFile = "task1.out";
@@ -50,13 +54,21 @@ class Program {
 		Console.ReadKey();
 	}
 
-
+	/// <summary>
+	/// Processes a line of text (by removing unnecessary spaces) and adds each non-empty
+	/// "word" to the supplied SortedSet.
+	/// </summary>
+	/// <param name="text">the input text</param>
+	/// <param name="set">a SortedSet passed by reference</param>
 	static void SplitStringToSet(string text, ref SortedSet<string> set) {
 		// remove extra spaces: trim + compact
 		text = Regex.Replace(text.Trim(), @"\s{2,}", " ");
 
 		foreach (string item in text.Split(' ')) {
-			set.Add(item);
+			// add to the set every non-empty "word"
+			if (item != "") {
+				set.Add(item);
+			}
 		}
 	}
 }
