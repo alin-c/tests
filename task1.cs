@@ -11,11 +11,16 @@ class Program {
 		SortedSet<string> set = new();
 
 		// read the input file line by line and add each "word" to the set
-		using (StreamReader reader = new("deps.in")) {
+		string inputFile = "deps.in";
+		try {
+			using StreamReader reader = new(inputFile);
 			string line;
 			while ((line = reader.ReadLine()) != null) {
 				SplitStringToSet(line, ref set);
 			}
+		} catch (Exception) {
+			Console.WriteLine($"[!] The file '{inputFile}' could not be read.\nCheck if the file '{inputFile}' exists in the current directory and then try again.");
+			return;
 		}
 
 		// add the ordered items to a string
@@ -23,14 +28,21 @@ class Program {
 		foreach (var item in set) {
 			result += string.Concat(item, "\n");
 		}
+
 		// remove the last newline
 		result = result.Remove(result.Length - 1);
 
-		// print them to the output file in lexicographical order
-		using (StreamWriter writer = new("task1.out")) {
+		// print the resulting string to the output file in lexicographical order
+		string outputFile = "task1.out";
+		try {
+			using StreamWriter writer = new(outputFile);
 			writer.Write(result);
+		} catch (Exception) {
+			Console.WriteLine($"[!] The file '{outputFile}' could not be written.\nThis may happen if you do not have permission to write to the current directory or if the file is set as read-only.");
+			return;
 		}
 
+		// notify the user about the program's execution
 		Console.Write("Task 1 done! Press any key to exit...");
 		Console.ReadKey();
 	}
@@ -38,6 +50,7 @@ class Program {
 	static void SplitStringToSet(string text, ref SortedSet<string> set) {
 		// remove extra spaces: trim + compact
 		text = Regex.Replace(text.Trim(), @"\s{2,}", " ");
+
 		foreach (string item in text.Split(' ')) {
 			set.Add(item);
 		}
