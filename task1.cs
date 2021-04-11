@@ -18,8 +18,11 @@ class Program {
 			while ((line = reader.ReadLine()) != null) {
 				SplitStringToSet(line, ref set);
 			}
-		} catch (Exception) {
+		} catch (IOException) {
 			Console.WriteLine($"[!] The file '{inputFile}' could not be read.\nCheck if the file '{inputFile}' exists in the current directory and then try again.");
+			return;
+		} catch (Exception e) {
+			Console.WriteLine("[!] " + e.Message);
 			return;
 		}
 
@@ -37,7 +40,7 @@ class Program {
 		try {
 			using StreamWriter writer = new(outputFile);
 			writer.Write(result);
-		} catch (Exception) {
+		} catch (IOException) {
 			Console.WriteLine($"[!] The file '{outputFile}' could not be written.\nThis may happen if you do not have permission to write to the current directory or if the file is set as read-only.");
 			return;
 		}
@@ -46,6 +49,7 @@ class Program {
 		Console.Write("Task 1 done! Press any key to exit...");
 		Console.ReadKey();
 	}
+
 
 	static void SplitStringToSet(string text, ref SortedSet<string> set) {
 		// remove extra spaces: trim + compact
