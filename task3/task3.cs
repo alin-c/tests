@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 class Task3 {
 	/// <summary>
@@ -33,7 +34,7 @@ class Task3 {
 			while ((line = compsReader.ReadLine()) != null) {
 				SplitStringToSet(line, ref temp);
 				computers.Add(temp);
-				temp.Clear();
+				temp = new();
 			}
 		} catch (IOException) {
 			Console.WriteLine($"[!] An input file could not be read.\nCheck if the files '{depsInputFile}' and '{compsInputFile}' exist in the current directory and are readable, then try again.");
@@ -45,13 +46,13 @@ class Task3 {
 
 		// change the contents of computers to be the difference between the dependency set and current content
 		for (var i = 0; i < computers.Count; i++) {
-			computers[i] = dependencies.Except(computers[i]);
+			computers[i] = new SortedSet<string>(dependencies.Except(computers[i]));
 		}
 
 		// add the ordered items to a StringBuilder, since there are potentially many concatenations to be made
 		StringBuilder result = new();
 		foreach (var item in computers) {
-			result.Append(item + "\n");
+			result.Append(string.Join(" ", item) + "\n");
 		}
 
 		// remove the last newline
