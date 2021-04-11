@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 class Program {
 	static void Main() {
-		// create a HashSet for storing the text
-		HashSet<string> set = new();
+		// create a SortedSet for storing the text because it
+		//	1. ignores newly added duplicates;
+		// 	2. automatically sorts its contents
+		SortedSet<string> set = new();
 
-		// read the input file line by line and add each word to the set
-		// (because HashSet ignores newly added duplicates)
+		// read the input file line by line and add each "word" to the set
 		using (StreamReader reader = new("deps.in")) {
 			string line;
 			while ((line = reader.ReadLine()) != null) {
@@ -18,14 +18,9 @@ class Program {
 			}
 		}
 
-		// use a Linq query to get the sorted items from the set
-		var items = from item in set
-					orderby item ascending
-					select item;
-
 		// add the ordered items to a string
-		string result = "";
-		foreach (var item in items) {
+		string result = null;
+		foreach (var item in set) {
 			result += string.Concat(item, "\n");
 		}
 		// remove the last newline
@@ -40,7 +35,7 @@ class Program {
 		Console.ReadKey();
 	}
 
-	static void SplitStringToSet(string text, ref HashSet<string> set) {
+	static void SplitStringToSet(string text, ref SortedSet<string> set) {
 		// remove extra spaces: trim + compact
 		text = Regex.Replace(text.Trim(), @"\s{2,}", " ");
 		foreach (string item in text.Split(' ')) {
